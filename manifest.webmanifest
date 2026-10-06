@@ -1,0 +1,17 @@
+{
+  "name": "NH90 Performance",
+  "short_name": "NH90 Perf",
+  "description": "Calcolo dei grafici di prestazione NH90 con percorso di lettura.",
+  "lang": "it",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#E7EBEE",
+  "theme_color": "#1B2430",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

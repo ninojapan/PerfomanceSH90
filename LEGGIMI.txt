@@ -1,0 +1,24 @@
+NH90 Performance - app installabile (PWA)
+
+Contenuto: index.html, manifest.webmanifest, sw.js, cartella icons.
+Mantieni questa struttura: i file vanno pubblicati insieme, nella stessa cartella.
+
+1. Pubblicazione (serve un indirizzo https)
+   Esempio con GitHub Pages: crea un repository, carica tutti i file,
+   poi Settings > Pages > Deploy from a branch > main / (root).
+   Dopo un minuto l'app risponde su https://<utente>.github.io/<repository>/
+
+2. Installazione
+   iPhone / iPad: apri l'indirizzo in Safari > Condividi > Aggiungi alla schermata Home.
+   Android: apri l'indirizzo in Chrome > menu > Installa app.
+
+3. Offline
+   Dopo la prima apertura l'app funziona anche senza rete.
+
+4. Aggiornamenti
+   Quando arrivano nuovi grafici sostituisci i file sul sito: l'app si aggiorna
+   alla prima apertura con rete (il numero di versione è in sw.js).
+
+Nota: un sito GitHub Pages è pubblico. Verifica che i dati ricavati dal manuale
+si possano pubblicare; in alternativa usa un hosting con accesso protetto.
+Strumento di supporto: per l'impiego in volo fa fede il manuale ufficiale.
