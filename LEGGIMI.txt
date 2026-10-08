@@ -19,6 +19,11 @@ Mantieni questa struttura: i file vanno pubblicati insieme, nella stessa cartell
    Quando arrivano nuovi grafici sostituisci i file sul sito: l'app si aggiorna
    alla prima apertura con rete (il numero di versione è in sw.js).
 
+5. Performance Data
+   I dati inseriti restano salvati sul telefono (solo in quel browser).
+   OAT di atterraggio e crociera: stimate dall'OAT di decollo con la stessa
+   deviazione ISA. Quote convertite in pressure altitude con il BARO.
+
 Nota: un sito GitHub Pages è pubblico. Verifica che i dati ricavati dal manuale
 si possano pubblicare; in alternativa usa un hosting con accesso protetto.
 Strumento di supporto: per l'impiego in volo fa fede il manuale ufficiale.
