@@ -218,7 +218,7 @@ html.lock{overflow:hidden}
 <div id="upd" class="upd" role="status" hidden><span>Nuova versione disponibile</span><button type="button" id="upd-go" onclick="location.reload()">Aggiorna</button></div>
 <main>
 <section id="v-home" aria-labelledby="home-t">
-  <div class="brand"><h1 class="bt" id="home-t">NH90</h1><span class="bs">Performance</span><span class="spec">Fig 4-1 · Fig 5-7 · MAX GW 11.000 kg · v34</span></div>
+  <div class="brand"><h1 class="bt" id="home-t">NH90</h1><span class="bs">Performance</span><span class="spec">Fig 4-1 · Fig 5-7 · MAX GW 11.000 kg · v35</span></div>
   <nav class="homenav" aria-label="Sezioni">
     <button type="button" class="hbtn" data-go="grafici"><span class="ht">Grafici</span><span class="hs">Le figure del manuale con il percorso di lettura: hover, WAT, torque, cruise.</span><span class="ha" aria-hidden="true">›</span></button>
     <button type="button" class="hbtn" data-go="perf"><span class="ht">Performance Data</span><span class="hs">Inserisci i dati del volo: l'app compila pesi limite, potenze disponibili e crociera.</span><span class="ha" aria-hidden="true">›</span></button>
@@ -2207,8 +2207,12 @@ function pfRun(){
      +`<p class="pline">Il punto rosso indica la configurazione selezionata. Per l'OEI il manuale dà un solo grafico (NR 97%, ECS OFF).</p>`+M.html());}
 
   // WAT continued flight
-  {const M=PMS(),id=`wcf-ecs-${ecs}`,r=PHS.map(([k,n])=>pfIso(id,ph[k],0,M,n));
-   H+=sec('pc-wcf','WAT cont. flight',`NR 100% · ECS ${ecs.toUpperCase()} · ${CHM[id].fig}`,tbl(HK,[`<tr>${lab('Peso max','vento nullo')}${tdW(r[0],ph.to.gw)}${tdW(r[1],ph.ld.gw)}</tr>`])+M.html());}
+  // at takeoff and at cruise altitude; both compared with the takeoff gross weight (heaviest, start of the cruise)
+  {const M=PMS(),id=`wcf-ecs-${ecs}`,r=[pfIso(id,ph.to,0,M,'Decollo'),pfIso(id,ph.cr,0,M,'Crociera')];
+   H+=sec('pc-wcf','WAT cont. flight',`NR 100% · ECS ${ecs.toUpperCase()} · ${CHM[id].fig}`,tbl(['','Decollo','Crociera'],[
+     `<tr>${lab('PA','ft')}<td class="mid">${n0(ph.to.pa)}</td><td class="mid">${n0(ph.cr.pa)}</td></tr>`,
+     `<tr>${lab('Peso max','kg · vento nullo')}${tdW(r[0],ph.to.gw)}${tdW(r[1],ph.to.gw)}</tr>`])
+     +(Number.isFinite(ph.to.gw)?`<p class="pline">Entrambe le colonne sono confrontate con il gross weight al decollo, <b>${fmt(ph.to.gw)} kg</b>.</p>`:'')+M.html());}
 
   // cruise
   {const M=PMS(),cw=PCFG.cw==='ld'?'ld':'to',W=cw==='ld'?ph.ld.gw:ph.to.gw;let res=null;
@@ -2229,7 +2233,7 @@ function pfRun(){
 
 {const h=location.hash.slice(1);route(VIEWS.includes(h)?h:'home');}
 
-if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{const chk=()=>reg.update().catch(()=>{});chk();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')chk();});navigator.serviceWorker.addEventListener('message',ev=>{if(ev.data&&ev.data.ver&&ev.data.ver!=='nh90-perf-v34')$('upd').hidden=false;});reg.addEventListener('updatefound',()=>{const w=reg.installing;if(w&&navigator.serviceWorker.controller)w.addEventListener('statechange',()=>{if(w.state==='activated')w.postMessage('ver');});});}).catch(()=>{});}
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{const chk=()=>reg.update().catch(()=>{});chk();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')chk();});navigator.serviceWorker.addEventListener('message',ev=>{if(ev.data&&ev.data.ver&&ev.data.ver!=='nh90-perf-v35')$('upd').hidden=false;});reg.addEventListener('updatefound',()=>{const w=reg.installing;if(w&&navigator.serviceWorker.controller)w.addEventListener('statechange',()=>{if(w.state==='activated')w.postMessage('ver');});});}).catch(()=>{});}
 </script>
 </body>
 </html>
