@@ -20,7 +20,7 @@ Mantieni questa struttura: i file vanno pubblicati insieme, nella stessa cartell
    (scheda Actions, spunta verde; poi fino a 10 minuti di cache di GitHub).
    Con rete l'app carica sempre l'ultima versione all'apertura; se era già aperta
    compare la barra "Nuova versione disponibile" con il pulsante Aggiorna.
-   La versione in uso è scritta nella Home (es. v33) e in sw.js.
+   La versione in uso è scritta nella Home (es. v34) e in sw.js.
 
 5. Performance Data
    I dati inseriti restano salvati sul telefono (solo in quel browser).
