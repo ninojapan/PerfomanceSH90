@@ -16,8 +16,11 @@ Mantieni questa struttura: i file vanno pubblicati insieme, nella stessa cartell
    Dopo la prima apertura l'app funziona anche senza rete.
 
 4. Aggiornamenti
-   Quando arrivano nuovi grafici sostituisci i file sul sito: l'app si aggiorna
-   alla prima apertura con rete (il numero di versione è in sw.js).
+   Sostituisci i file sul sito e attendi che GitHub Pages finisca la pubblicazione
+   (scheda Actions, spunta verde; poi fino a 10 minuti di cache di GitHub).
+   Con rete l'app carica sempre l'ultima versione all'apertura; se era già aperta
+   compare la barra "Nuova versione disponibile" con il pulsante Aggiorna.
+   La versione in uso è scritta nella Home (es. v32) e in sw.js.
 
 5. Performance Data
    I dati inseriti restano salvati sul telefono (solo in quel browser).
