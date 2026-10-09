@@ -218,7 +218,7 @@ html.lock{overflow:hidden}
 <div id="upd" class="upd" role="status" hidden><span>Nuova versione disponibile</span><button type="button" id="upd-go" onclick="location.reload()">Aggiorna</button></div>
 <main>
 <section id="v-home" aria-labelledby="home-t">
-  <div class="brand"><h1 class="bt" id="home-t">NH90</h1><span class="bs">Performance</span><span class="spec">Fig 4-1 · Fig 5-7 · MAX GW 11.000 kg · v35</span></div>
+  <div class="brand"><h1 class="bt" id="home-t">NH90</h1><span class="bs">Performance</span><span class="spec">Fig 4-1 · Fig 5-7 · MAX GW 11.000 kg · v36</span></div>
   <nav class="homenav" aria-label="Sezioni">
     <button type="button" class="hbtn" data-go="grafici"><span class="ht">Grafici</span><span class="hs">Le figure del manuale con il percorso di lettura: hover, WAT, torque, cruise.</span><span class="ha" aria-hidden="true">›</span></button>
     <button type="button" class="hbtn" data-go="perf"><span class="ht">Performance Data</span><span class="hs">Inserisci i dati del volo: l'app compila pesi limite, potenze disponibili e crociera.</span><span class="ha" aria-hidden="true">›</span></button>
@@ -2194,6 +2194,26 @@ function pfRun(){
    H+=sec('pc-pwr','PWR available hover','torque % · Fig 4-1-13…24',
      `<h3>AEO</h3>${tbl(HP,aeo)}<h3>OEI</h3>${tbl(HP,oei)}`+M.html());}
 
+  // power required in hover (Fig 4-1-35/36/39): IGE and OGE for every NR/ECS case, against the power available of the same case
+  {const M=PMS(),D=PMS();let hwq=hw;
+   if(hwq<0){M.add('s','Vento in coda: i grafici del torque richiesto coprono solo headwind da 0 a 50 kt.');hwq=null;}
+   else if(hwq>50){M.add('w','Headwind oltre 50 kt: i grafici arrivano a 50 kt, il calcolo usa 50 kt.');hwq=50;}
+   const cases=[[100,'off'],[100,'on'],[104,'off'],[104,'on'],[97,'off'],[97,'on']];
+   const req=(n,e,p,where)=>{const c=CHM['tqr-'+n+(e==='on'?'-ecs':'')];if(!p.ok||hwq===null||!Number.isFinite(p.gw))return null;
+     const z=tqZero(c,{pa:p.pa,oat:p.oat,gw:p.gw});z.stop.forEach(t=>M.add('s',t,where));z.warn.forEach(t=>M.add('w',t,where));
+     if(z.v===null)return null;
+     if(Math.min(z.I0,z.O0)<c.data.tq0)M.add('i',`Valore sotto l'inizio della scala torque del grafico (${c.data.tq0}%): estrapolato.`,where);
+     const add=c.ecsAdd||0;return{I:tqWind(c,z.I0,hwq)+add,O:tqWind(c,z.O0,hwq)+add};};
+   const avail=(n,e,p)=>{const x=pfIso(n===97?'tq-2min-oei':'tq-top-aeo'+sfx(n,e),p,0,D,'');return typeof x==='number'?x:null;};
+   const R=cases.map(([n,e])=>PHS.map(([k,nm])=>({r:req(n,e,ph[k],`${nm} · ${n===97?'OEI':'AEO'} ${n}%${e==='on'?' ECS ON':''}`),a:avail(n,e,ph[k])})));
+   const td=(x,a)=>x==null?'<td class="na">–</td>':a==null?`<td>${dec(x)}</td>`:x>a+0.05?`<td class="no"><span>${dec(x)}</span></td>`:`<td class="ok">${dec(x)}</td>`;
+   const rows=key=>cases.map(([n,e],i)=>`<tr${(n===nr||n===97)&&e===ecs?' class="sel"':''}>${lab(n===97?'OEI':'AEO',cfgL(n,e))}${R[i].map(x=>td(x.r&&x.r[key],x.a)).join('')}</tr>`);
+   const hwT=hwq===null?'–':fmt(hwq);
+   H+=sec('pc-req','PWR required hover',`torque % · headwind ${hwT} kt · Fig 4-1-35/36/39`,
+     `<h3>IGE 10 ft</h3>${tbl(HP,rows('I'))}<h3>OGE</h3>${tbl(HP,rows('O'))}`
+     +`<p class="legend"><span><i class="lg-ok"></i>Entro la potenza disponibile</span><span><i class="lg-no"></i>Oltre la potenza disponibile</span></p>`
+     +`<p class="pline">Confronto con il TOP AEO dello stesso NR ed ECS; per le righe OEI (torque del motore rimasto, NR 97%) con il 2 MIN OEI, che il manuale dà solo ECS OFF. Il punto rosso indica la configurazione selezionata.</p>`+M.html());}
+
   // max gross weight in hover
   {const M=PMS(),hwT=hw<0?null:Math.min(hw,40);
    if(hw<0)M.add('s','Vento in coda: i grafici OGE coprono solo headwind da 0 a 40 kt, nessun peso OGE.');
@@ -2233,7 +2253,7 @@ function pfRun(){
 
 {const h=location.hash.slice(1);route(VIEWS.includes(h)?h:'home');}
 
-if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{const chk=()=>reg.update().catch(()=>{});chk();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')chk();});navigator.serviceWorker.addEventListener('message',ev=>{if(ev.data&&ev.data.ver&&ev.data.ver!=='nh90-perf-v35')$('upd').hidden=false;});reg.addEventListener('updatefound',()=>{const w=reg.installing;if(w&&navigator.serviceWorker.controller)w.addEventListener('statechange',()=>{if(w.state==='activated')w.postMessage('ver');});});}).catch(()=>{});}
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{const chk=()=>reg.update().catch(()=>{});chk();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')chk();});navigator.serviceWorker.addEventListener('message',ev=>{if(ev.data&&ev.data.ver&&ev.data.ver!=='nh90-perf-v36')$('upd').hidden=false;});reg.addEventListener('updatefound',()=>{const w=reg.installing;if(w&&navigator.serviceWorker.controller)w.addEventListener('statechange',()=>{if(w.state==='activated')w.postMessage('ver');});});}).catch(()=>{});}
 </script>
 </body>
 </html>

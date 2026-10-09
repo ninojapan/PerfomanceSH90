@@ -1,4 +1,4 @@
-const CACHE='nh90-perf-v35';
+const CACHE='nh90-perf-v36';
 const FILES=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png','./icons/apple-touch-icon.png'];
 // precache bypassing the browser HTTP cache (GitHub Pages keeps files for 10 min): never store an old page in a new version
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES.map(u=>new Request(u,{cache:'reload'})))).then(()=>self.skipWaiting()));});
