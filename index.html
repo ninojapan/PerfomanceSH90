@@ -205,6 +205,21 @@ html.lock{overflow:hidden}
 .sig{margin:auto 0 0;align-self:flex-end;padding:32px 4px 0 0;font:400 38px/1 'Firma',cursive;color:var(--ink);text-align:right;white-space:nowrap}
 .sig .c{font-size:26px;color:var(--muted);margin-right:2px}
 @media (max-width:360px){.sig{font-size:33px}.sig .c{font-size:23px}}
+.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:10px}
+.fgrid>div{min-width:0}
+.fres{display:flex;flex-direction:column;margin-top:12px;border-top:1px solid var(--rule);padding-top:8px}
+.fres.top{margin-top:0;border-top:0;padding-top:0}
+.fres .kl{font-size:13px}
+.fres .kv{font-size:40px}
+.fres .kv small{font-size:16px;margin-left:4px;color:var(--muted)}
+.fres .ks{font-size:15px}
+.fcol .fres.top .kl{line-height:1.45;margin-bottom:4px}
+#v-fh .ph{border-bottom:0;padding-bottom:0;margin-bottom:0}
+.tl{margin:16px 0 0}
+.tl-bar{position:relative;height:12px;border-radius:6px;background:var(--rule-soft);border:1.5px solid var(--ink)}
+.tl-fh{position:absolute;top:-1.5px;bottom:-1.5px;border-radius:6px;background:var(--path)}
+.tl-lab{display:flex;justify-content:space-between;gap:8px;margin-top:5px;font:600 14px var(--num);color:var(--muted);font-variant-numeric:tabular-nums}
+.tl-lab .tl-mid{font:500 12px var(--txt);color:var(--path)}
 </style>
 </head>
 <body>
@@ -218,10 +233,11 @@ html.lock{overflow:hidden}
 <div id="upd" class="upd" role="status" hidden><span>Nuova versione disponibile</span><button type="button" id="upd-go" onclick="location.reload()">Aggiorna</button></div>
 <main>
 <section id="v-home" aria-labelledby="home-t">
-  <div class="brand"><h1 class="bt" id="home-t">NH90</h1><span class="bs">Performance</span><span class="spec">Fig 4-1 · Fig 5-7 · MAX GW 11.000 kg · v36</span></div>
+  <div class="brand"><h1 class="bt" id="home-t">NH90</h1><span class="bs">Performance</span><span class="spec">Fig 4-1 · Fig 5-7 · MAX GW 11.000 kg · v37</span></div>
   <nav class="homenav" aria-label="Sezioni">
     <button type="button" class="hbtn" data-go="grafici"><span class="ht">Grafici</span><span class="hs">Le figure del manuale con il percorso di lettura: hover, WAT, torque, cruise.</span><span class="ha" aria-hidden="true">›</span></button>
     <button type="button" class="hbtn" data-go="perf"><span class="ht">Performance Data</span><span class="hs">Inserisci i dati del volo: l'app compila pesi limite, potenze disponibili e crociera.</span><span class="ha" aria-hidden="true">›</span></button>
+    <button type="button" class="hbtn" data-go="fh"><span class="ht">Conversione FH</span><span class="hs">Ore ORR e FH da decimali a ore e minuti, con gli orari di decollo e atterraggio.</span><span class="ha" aria-hidden="true">›</span></button>
   </nav>
   <p class="foot">Curve ricavate dalle figure del manuale (quelle da screenshot hanno una piccola tolleranza di lettura). È uno strumento di supporto: per l'impiego in volo fa fede il manuale ufficiale.</p>
   <p class="sig"><span class="c">Creato da</span> Antonino Scolla</p>
@@ -272,6 +288,32 @@ html.lock{overflow:hidden}
   </div></fieldset>
   <div id="pout"></div>
   <p class="foot">Curve ricavate dalle figure del manuale (quelle da screenshot hanno una piccola tolleranza di lettura). È uno strumento di supporto: per l'impiego in volo fa fede il manuale ufficiale.</p>
+</section>
+
+<section id="v-fh" hidden aria-labelledby="fh-t">
+  <div class="topbar"><button type="button" class="back" data-go="home">‹ Home</button></div>
+  <div class="ph"><h1 id="fh-t">Conversione FH</h1><p>Ore in decimali convertite in ore e minuti, arrotondate al minuto più vicino.</p></div>
+  <section class="pcard" aria-labelledby="fh-orr-t"><h2 id="fh-orr-t">ORR<small>ore rotore</small></h2>
+    <div class="fgrid">
+      <div><div class="field"><label for="fh-orr">ORR</label><div class="box"><input id="fh-orr" data-k="orr" type="text" inputmode="decimal" placeholder="1.91" autocomplete="off" enterkeyhint="next"><span>h</span></div></div>
+        <div class="fres"><span class="kl">Ore e minuti</span><span class="kv" id="fh-orr-hm">–</span><span class="ks" id="fh-orr-s"></span></div></div>
+      <div><div class="field"><label for="fh-to">Ora decollo</label><div class="box"><input id="fh-to" data-k="to" type="text" inputmode="numeric" placeholder="10:35" autocomplete="off" enterkeyhint="next"><span>hh:mm</span></div></div>
+        <div class="fres"><span class="kl">Ora atterraggio</span><span class="kv" id="fh-ldg">–</span><span class="ks" id="fh-ldg-s"></span></div></div>
+    </div>
+    <div id="fh-m1"></div>
+  </section>
+  <section class="pcard" aria-labelledby="fh-fh-t"><h2 id="fh-fh-t">FH<small>ore di volo</small></h2>
+    <div class="fgrid">
+      <div><div class="field"><label for="fh-fh">FH</label><div class="box"><input id="fh-fh" data-k="fh" type="text" inputmode="decimal" placeholder="1.65" autocomplete="off" enterkeyhint="done"><span>h</span></div></div>
+        <div class="fres"><span class="kl">Ore e minuti</span><span class="kv" id="fh-fh-hm">–</span><span class="ks" id="fh-fh-s"></span></div></div>
+      <div class="fcol"><div class="fres top"><span class="kl">Decollo FH</span><span class="kv" id="fh-fto">–</span></div>
+        <div class="fres"><span class="kl">Atterraggio FH</span><span class="kv" id="fh-fld">–</span></div></div>
+    </div>
+    <div class="tl" id="fh-tl" hidden aria-hidden="true"><div class="tl-bar"><div class="tl-fh" id="fh-tlfh"></div></div>
+      <div class="tl-lab"><span id="fh-tla"></span><span class="tl-mid">FH centrate nell'ORR</span><span id="fh-tlb"></span></div></div>
+    <p class="pline" id="fh-note"></p>
+    <div id="fh-m2"></div>
+  </section>
 </section>
 </main>
 <script>
@@ -1996,10 +2038,11 @@ setChart(CHARTS[0].id);
  $('disc-ok').addEventListener('click',()=>{d.hidden=true;mn.inert=false;mn.removeAttribute('aria-hidden');document.documentElement.classList.remove('lock');
 });}
 
-const VIEWS=['home','grafici','perf'];let navPushed=false;
+const VIEWS=['home','grafici','perf','fh'];let navPushed=false;
 function route(v){if(!VIEWS.includes(v))v='home';
-  $('v-home').hidden=v!=='home';$('v-charts').hidden=v!=='grafici';$('v-perf').hidden=v!=='perf';
-  document.title=v==='perf'?'NH90 Performance Data':'NH90 Performance';
+  $('v-home').hidden=v!=='home';$('v-charts').hidden=v!=='grafici';$('v-perf').hidden=v!=='perf';$('v-fh').hidden=v!=='fh';
+  document.title=v==='perf'?'NH90 Performance Data':v==='fh'?'NH90 Conversione FH':'NH90 Performance';
+  if(v==='fh')fhRun();
   if(v==='perf')pfRun();window.scrollTo(0,0);}
 function goView(v){
   if(v==='home'&&navPushed){navPushed=false;try{history.back();return;}catch(e){}}
@@ -2251,9 +2294,51 @@ function pfRun(){
   $('pout').innerHTML=H;
 }
 
+/* ---------- Conversione FH ---------- */
+const FHK='nh90.fh.v1',FV={orr:'',to:'',fh:''};
+try{Object.assign(FV,JSON.parse(localStorage.getItem(FHK)||'{}'));}catch(e){}
+const fhDec=x=>{const t=String(x||'').trim().replace(',','.');return t===''?null:(/^\d*\.?\d*$/.test(t)&&t!=='.'?Number(t):NaN);};
+function fhTime(x){const t=String(x||'').trim();if(t==='')return null;
+  const m=t.match(/^(\d{1,2})[:.,h ](\d{2})$/)||t.match(/^(\d{1,2})(\d{2})$/);if(!m)return NaN;
+  const h=+m[1],mi=+m[2];return h>23||mi>59?NaN:h*60+mi;}
+const fhHM=n=>`${Math.floor(n/60)}:${String(n%60).padStart(2,'0')}`;
+const fhHMtxt=n=>{const h=Math.floor(n/60),m=n%60;return h&&m?`${h} h ${m} min`:h?`${h} h`:`${m} min`;};
+const fhClk=n=>{const d=Math.floor(n/1440),t=((n%1440)+1440)%1440;return `${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}${d>0?'<small>+1 g</small>':''}`;};
+const fhClkT=n=>fhClk(n).replace(/<[^>]+>/g,' ').trim();
+function fhRun(){
+  const M1=PMS(),M2=PMS(),orr=fhDec(FV.orr),fh=fhDec(FV.fh),t0=fhTime(FV.to);
+  const mins=(x,lab,ms)=>{if(x===null)return null;if(!(x>0&&x<=24)){ms.add('s',`${lab} non valido: inserisci le ore in decimali, es. 1.91 (anche 1,91).`);return null;}return Math.round(x*60);};
+  const om=mins(orr,'ORR',M1),fm=mins(fh,'FH',M2);
+  if(Number.isNaN(t0))M1.add('s','Ora di decollo non valida: usa hh:mm, es. 10:35 (va bene anche 1035).');
+  const rnd=(x,m)=>{const e=x*60;return Math.abs(e-m)<0.005?`${fhHMtxt(m)}`:`${dec(e)} min → ${m} min`;};
+  $('fh-orr-hm').innerHTML=om===null?'–':fhHM(om);$('fh-orr-s').textContent=om===null?'':rnd(orr,om);
+  $('fh-fh-hm').innerHTML=fm===null?'–':fhHM(fm);$('fh-fh-s').textContent=fm===null?'':rnd(fh,fm);
+  const tok=Number.isFinite(t0);
+  const ldg=om!==null&&tok?t0+om:null;
+  $('fh-ldg').innerHTML=ldg===null?'–':fhClk(ldg);
+  $('fh-ldg-s').textContent=ldg===null?'':`decollo ${fhClkT(t0)} + ${fhHM(om)}`;
+  let fto=null,fld=null;
+  if(om!==null&&fm!==null&&fm>om)M2.add('s','FH maggiore dell\'ORR: le ore di volo devono essere minori delle ore rotore. Controlla i valori.');
+  else if(om!==null&&fm!==null&&fm===om)M2.add('w','FH uguale all\'ORR: di norma l\'FH è minore.');
+  if(fm!==null&&om!==null&&fm<=om){
+    if(!tok)M2.add('i','Inserisci l\'ora di decollo nella sezione ORR per avere gli orari FH.');
+    else{const d=om-fm,a=Math.floor(d/2),b=d-a;fto=t0+a;fld=fto+fm;
+      $('fh-note').innerHTML=`ORR − FH = <b>${d} min</b>: l'FH inizia ${a} min dopo il decollo e finisce ${b} min prima dell'atterraggio ORR.`;
+      $('fh-tlfh').style.left=(a/om*100)+'%';$('fh-tlfh').style.width=(fm/om*100)+'%';
+      $('fh-tla').textContent=fhClkT(t0);$('fh-tlb').textContent=fhClkT(ldg);}}
+  else if(fm!==null&&om===null)M2.add('i','Inserisci l\'ORR e l\'ora di decollo nella sezione ORR per avere gli orari FH.');
+  if(fto===null)$('fh-note').innerHTML='';
+  $('fh-tl').hidden=fto===null;
+  $('fh-fto').innerHTML=fto===null?'–':fhClk(fto);$('fh-fld').innerHTML=fld===null?'–':fhClk(fld);
+  $('fh-m1').innerHTML=M1.html();$('fh-m2').innerHTML=M2.html();
+}
+for(const k of ['orr','to','fh']){const i=$('fh-'+k);i.value=FV[k]||'';
+  i.addEventListener('input',()=>{FV[k]=i.value;try{localStorage.setItem(FHK,JSON.stringify(FV));}catch(e){}fhRun();});}
+$('fh-to').addEventListener('blur',()=>{const t=fhTime(FV.to);if(Number.isFinite(t)){const v=fhClkT(t);$('fh-to').value=v;FV.to=v;try{localStorage.setItem(FHK,JSON.stringify(FV));}catch(e){}}});
+
 {const h=location.hash.slice(1);route(VIEWS.includes(h)?h:'home');}
 
-if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{const chk=()=>reg.update().catch(()=>{});chk();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')chk();});navigator.serviceWorker.addEventListener('message',ev=>{if(ev.data&&ev.data.ver&&ev.data.ver!=='nh90-perf-v36')$('upd').hidden=false;});reg.addEventListener('updatefound',()=>{const w=reg.installing;if(w&&navigator.serviceWorker.controller)w.addEventListener('statechange',()=>{if(w.state==='activated')w.postMessage('ver');});});}).catch(()=>{});}
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{const chk=()=>reg.update().catch(()=>{});chk();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')chk();});navigator.serviceWorker.addEventListener('message',ev=>{if(ev.data&&ev.data.ver&&ev.data.ver!=='nh90-perf-v37')$('upd').hidden=false;});reg.addEventListener('updatefound',()=>{const w=reg.installing;if(w&&navigator.serviceWorker.controller)w.addEventListener('statechange',()=>{if(w.state==='activated')w.postMessage('ver');});});}).catch(()=>{});}
 </script>
 </body>
 </html>
